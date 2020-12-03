@@ -50,6 +50,13 @@ test("function definition", () => {
   ])).toEqual(4);
 });
 
+test("anonymous functions", () => {
+  expect(execute([
+    ['def', 'inc', ['fn', ['num'], ['+', 1, 'num']]],
+    ['def', 'result', ['inc', 3]]
+  ])).toEqual(4);
+});
+
 test("reduce", () => {
   expect(execute([
     ['def', 'myList', ['list', 1, 2, 3]],
@@ -69,7 +76,14 @@ test("map", () => {
     ['defn', 'inc', ['num'], ['+', 1, 'num']],
     ['def', 'myList', ['list', 1, 2]],
     ['def', 'result', ['map', 'inc', 'myList']]
-  ])).toEqual(4);
+  ])).toEqual([2, 3]);
+});
+
+test("map with anonymous function", () => {
+  expect(execute([
+    ['def', 'myList', ['list', 1, 2]],
+    ['def', 'result', ['map', ['fn', ['num'], ['+', 'num', 1]], 'myList']]
+  ])).toEqual([2, 3]);
 });
 
 test("filter", () => {
@@ -93,6 +107,16 @@ test("let bindings", () => {
   ])).toEqual(11);
 });
 
+test("nested let bindings", () => {
+  expect(execute([
+    ['def', 'result', ['let', [
+      ['x', 5], 
+      ['y', 6], 
+      ['let', ['z', ['*', 'x', 'y', 2], 'z']]
+  ]]]
+  ])).toEqual(60);
+});
+
 test("not", () => {
   expect(execute([
     ['def', 'result', ['not', true]]
@@ -109,4 +133,16 @@ test("or", () => {
   expect(execute([
     ['def', 'result', ['or', true, false]]
   ])).toEqual(true);
+});
+
+test("closures", () => {
+  // x used in add5 is refered from the let binding
+  expect(execute([
+    ['def', 'result', ['let', 
+      ['x', 5],
+      ['add5', ['fn', ['num'], ['+', 'x', 'num']]]
+      ['myList', ['list', 1, 2, 3]],
+      ['map', 'add5', 'myList']
+    ]]
+  ]))
 });
