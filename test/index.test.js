@@ -111,9 +111,9 @@ test("nested let bindings", () => {
   expect(execute([
     ['def', 'result', ['let', [
       ['x', 5], 
-      ['y', 6], 
-      ['let', ['z', ['*', 'x', 'y', 2], 'z']]
-  ]]]
+      ['y', 6]], 
+      ['let', [['z', ['*', 'x', 'y', 2]], 'z']]
+  ]]
   ])).toEqual(60);
 });
 
@@ -139,9 +139,9 @@ test("closures", () => {
   // x used in add5 is refered from the let binding
   expect(execute([
     ['def', 'result', ['let', 
-      ['x', 5],
+      [['x', 5],
       ['add5', ['fn', ['num'], ['+', 'x', 'num']]]
-      ['myList', ['list', 1, 2, 3]],
+      ['myList', ['list', 1, 2, 3]]],
       ['map', 'add5', 'myList']
     ]]
   ]))
